@@ -8,7 +8,31 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.DataContext>
+        <local:MainPageViewModel/>
+    </Page.DataContext>
+
     <Grid>
+        <ListView ItemsSource="{Binding Books}">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local:Book">
+                    <StackPanel>
+                        <TextBlock Text="{Binding Title}" FontSize="32"/>
+                        <TextBlock Text="{Binding Pages}" Foreground="Orange"/>
+                        <TextBlock Text="{Binding SampleText}" Foreground="SeaGreen">
+                            <TextBlock.DataContext>
+                                <local:MainPageViewModel/>
+                            </TextBlock.DataContext>
+                        </TextBlock>
+                        <TextBlock Text="{Binding Counter}">
+                            <TextBlock.DataContext>
+                                <local:MainPageViewModel/>
+                            </TextBlock.DataContext>
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
 
     </Grid>
 </Page>

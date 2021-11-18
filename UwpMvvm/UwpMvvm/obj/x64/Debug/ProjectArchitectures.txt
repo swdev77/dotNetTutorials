@@ -1,0 +1,1 @@
+C:\Coding\dotNetTutorials\UwpMvvm\UwpMvvm\UwpMvvm.csproj;x64
