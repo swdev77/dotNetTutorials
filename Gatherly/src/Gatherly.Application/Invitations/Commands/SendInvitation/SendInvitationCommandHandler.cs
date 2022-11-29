@@ -37,13 +37,18 @@ internal sealed class SendInvitationCommandHandler : IRequestHandler<SendInvitat
             return Unit.Value;
         }
 
-        var invitation = gathering.SendInvitation(member);
+        var invitationResult = gathering.SendInvitation(member);
 
-        _invitationRepository.Add(invitation);
+        if (invitationResult.IsFailure)
+        {
+            return Unit.Value;
+        }
+
+        _invitationRepository.Add(invitationResult.Value!);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        await _emailService.SendInvitationSendEmailAsync(invitation, cancellationToken);
+        await _emailService.SendInvitationSendEmailAsync(invitationResult.Value!, cancellationToken);
 
         return Unit.Value;
     }
