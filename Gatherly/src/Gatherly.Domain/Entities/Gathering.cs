@@ -1,7 +1,10 @@
 using System.Collections.ObjectModel;
+using Gatherly.Domain.Enums;
+using Gatherly.Domain.Primitives;
+
 namespace Gatherly.Domain.Entities;
 
-public class Gathering
+public sealed class Gathering : Entity
 {
     private readonly List<Invitation> _invitations = new();
     private readonly List<Attendee> _attendees = new();
@@ -12,21 +15,19 @@ public class Gathering
         DateTime scheduledAt,
         string name,
         string? location
-    )
+    ) : base(id)
     {
-        Id = id;
         Creator = creator;
         Type = type;
         ScheduledAtUtc = scheduledAt;
         Name = name;
         Location = location;
     }
-    public Guid Id { get; private set; }
-    public Member Creator { get; private set; }
-    public GatheringType Type { get; private set; }
-    public DateTime ScheduledAtUtc { get; private set; }
-    public string Name { get; private set; }
-    public string? Location { get; private set; }
+    public Member Creator { get; }
+    public GatheringType Type { get; }
+    public DateTime ScheduledAtUtc { get; }
+    public string Name { get; }
+    public string? Location { get; }
     public int? MaximumNumberOfAttendees { get; private set; }
     public DateTime? InvitationExpireAtUtc { get; private set; }
     public int? NumberOfAttendees { get; private set; }
@@ -44,7 +45,7 @@ public class Gathering
         int? invitationsValidBeforeInHours )
     {
         var gathering = new Gathering(
-            Guid.NewGuid(),
+            id,
             creator,
             type,
             scheduledAtUtc,
