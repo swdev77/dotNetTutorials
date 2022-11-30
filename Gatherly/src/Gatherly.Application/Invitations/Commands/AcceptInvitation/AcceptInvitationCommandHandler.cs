@@ -32,17 +32,11 @@ internal sealed class AcceptInvitationCommandHandler : IRequestHandler<AcceptInv
 
     public async Task<Unit> Handle(AcceptInvitationCommand request, CancellationToken cancellationToken)
     {
-        var invitation = await _invitationRepository.GetByIdAsync(request.InvitationId, cancellationToken);
+        var gathering = await _gatheringRepository.GetByIdWithCreatorAsync(request.GatheringId, cancellationToken);
+
+        var invitation = gathering.Invitations.FirstOrDefault(i => i.Id == request.InvitationId);
 
         if (invitation == null || invitation.Status != InvitationStatus.Pending)
-        {
-            return Unit.Value;
-        }
-
-        var member = await _memberRepository.GetByIdAsync(invitation.MemberId, cancellationToken);
-        var gathering = await _gatheringRepository.GetByIdWithCreatorAsync(invitation.GatheringId, cancellationToken);
-
-        if (member == null || gathering is null)
         {
             return Unit.Value;
         }
