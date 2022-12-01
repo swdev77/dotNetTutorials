@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using Gatherly.Domain.DomainEvents;
 using Gatherly.Domain.Enums;
 using Gatherly.Domain.Errors;

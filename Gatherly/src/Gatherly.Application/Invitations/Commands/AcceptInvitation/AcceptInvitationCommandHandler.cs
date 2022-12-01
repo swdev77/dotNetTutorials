@@ -44,7 +44,7 @@ internal sealed class AcceptInvitationCommandHandler : IRequestHandler<AcceptInv
         var attendeeResult = gathering.AcceptInvitation(invitation);
         if (attendeeResult.IsSuccess)
         {
-            _attendeeRepository.Add(attendeeResult.Value);
+            _attendeeRepository.Add(attendeeResult.Value!);
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

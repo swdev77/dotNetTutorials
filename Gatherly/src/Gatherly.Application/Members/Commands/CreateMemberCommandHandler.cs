@@ -1,5 +1,7 @@
 using Gatherly.Domain.Entities;
+using Gatherly.Domain.Errors;
 using Gatherly.Domain.Repositories;
+using Gatherly.Domain.Shared;
 using Gatherly.Domain.ValueObjects;
 using MediatR;
 
@@ -16,7 +18,7 @@ public sealed class CreateMemberCommandHandler : IRequestHandler<CreateMemberCom
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Unit> Handle(CreateMemberCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(CreateMemberCommand request, CancellationToken cancellationToken)
     {
         var firstNameResult = FirstName.Create(request.FirstName);
         var lastNameResult = LastName.Create(request.LastName);
@@ -24,11 +26,15 @@ public sealed class CreateMemberCommandHandler : IRequestHandler<CreateMemberCom
 
         if (firstNameResult.IsFailure || lastNameResult.IsFailure || emailResult.IsFailure)
         {
-            //log error
-            return Unit.Value;
+            return Result.Failure<Guid>(new("InvalidData", "Invalid member data."));
         }
 
-        var member = new Member(
+        if (!await _memberRepository.IsEmailUniqueAsync(emailResult.Value, cancellationToken))
+        {
+            return Result.Failure<Guid>(DomainErrors.Member.EmailAlreadyInUse);
+        }
+
+        var member = Member.Create(
             Guid.NewGuid(),
             firstNameResult.Value!,
             lastNameResult.Value!,
@@ -38,6 +44,11 @@ public sealed class CreateMemberCommandHandler : IRequestHandler<CreateMemberCom
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        return member.Id;
+    }
+
+    Task<Unit> IRequestHandler<CreateMemberCommand, Unit>.Handle(CreateMemberCommand request, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 }

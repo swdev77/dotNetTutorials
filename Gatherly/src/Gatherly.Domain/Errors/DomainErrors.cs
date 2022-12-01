@@ -15,4 +15,10 @@ public static class DomainErrors
         public static readonly Error InvitationExpired =
             new ("Gathering.InvitationExpired", "The invitation has expired.");
     }
+
+    public static class Member
+    {
+        public static readonly Error EmailAlreadyInUse =
+            new("Member.EmailAlreadyInUse", "The email is already in use.");
+    }
 }
