@@ -41,15 +41,10 @@ internal sealed class AcceptInvitationCommandHandler : IRequestHandler<AcceptInv
             return Unit.Value;
         }
 
-        var attendee = gathering.AcceptInvitation(invitation);
-        if (attendee is not null)
+        var attendeeResult = gathering.AcceptInvitation(invitation);
+        if (attendeeResult.IsSuccess)
         {
-            _attendeeRepository.Add(attendee);
-        }
-
-        if (invitation.Status == InvitationStatus.Accepted)
-        {
-            await _emailService.SendInvitationAcceptEmailAsync(invitation, cancellationToken);
+            _attendeeRepository.Add(attendeeResult.Value);
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

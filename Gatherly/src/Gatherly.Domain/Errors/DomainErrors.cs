@@ -11,5 +11,8 @@ public static class DomainErrors
 
         public static readonly Error AlreadyPassed =
             new ("Gathering.AlreadyPassed", "The gathering has already passed.");
+
+        public static readonly Error InvitationExpired =
+            new ("Gathering.InvitationExpired", "The invitation has expired.");
     }
 }
