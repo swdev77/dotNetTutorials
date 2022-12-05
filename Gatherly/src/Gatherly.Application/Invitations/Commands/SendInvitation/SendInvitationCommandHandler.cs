@@ -1,5 +1,4 @@
 using Gatherly.Application.Abstractions;
-using Gatherly.Domain.Entities;
 using Gatherly.Domain.Repositories;
 using MediatR;
 
