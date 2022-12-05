@@ -22,12 +22,11 @@ public sealed class Member : AggregateRoot
     public Email Email { get; }
 
     public static Member Create(
-        Guid guid,
         FirstName firstName,
         LastName lastName,
         Email email)
     {
-        var member = new Member(guid, firstName, lastName, email);
+        var member = new Member(Guid.NewGuid(), firstName, lastName, email);
 
         member.RaiseDomainEvent(new MemberRegisteredDomainEvent(member.Id));
 

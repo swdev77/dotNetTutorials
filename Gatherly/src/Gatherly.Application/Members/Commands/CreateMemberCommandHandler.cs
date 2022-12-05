@@ -1,3 +1,4 @@
+using Gatherly.Application.Abstractions.Messaging;
 using Gatherly.Domain.Entities;
 using Gatherly.Domain.Errors;
 using Gatherly.Domain.Repositories;
@@ -7,7 +8,7 @@ using MediatR;
 
 namespace Gatherly.Application.Members.Commands;
 
-public sealed class CreateMemberCommandHandler : IRequestHandler<CreateMemberCommand>
+public sealed class CreateMemberCommandHandler : ICommandHandler<CreateMemberCommand>
 {
     private readonly IMemberRepository _memberRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -18,7 +19,7 @@ public sealed class CreateMemberCommandHandler : IRequestHandler<CreateMemberCom
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result<Guid>> Handle(CreateMemberCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CreateMemberCommand request, CancellationToken cancellationToken)
     {
         var firstNameResult = FirstName.Create(request.FirstName);
         var lastNameResult = LastName.Create(request.LastName);
@@ -35,7 +36,6 @@ public sealed class CreateMemberCommandHandler : IRequestHandler<CreateMemberCom
         }
 
         var member = Member.Create(
-            Guid.NewGuid(),
             firstNameResult.Value!,
             lastNameResult.Value!,
             emailResult.Value!);
@@ -44,11 +44,6 @@ public sealed class CreateMemberCommandHandler : IRequestHandler<CreateMemberCom
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return member.Id;
-    }
-
-    Task<Unit> IRequestHandler<CreateMemberCommand, Unit>.Handle(CreateMemberCommand request, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
+        return Result.Success();
     }
 }
