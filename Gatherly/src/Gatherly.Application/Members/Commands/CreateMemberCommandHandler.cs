@@ -4,10 +4,11 @@ using Gatherly.Domain.Errors;
 using Gatherly.Domain.Repositories;
 using Gatherly.Domain.Shared;
 using Gatherly.Domain.ValueObjects;
+using MediatR;
 
 namespace Gatherly.Application.Members.Commands;
 
-public sealed class CreateMemberCommandHandler : ICommandHandler<CreateMemberCommand>
+internal sealed class CreateMemberCommandHandler : ICommandHandler<CreateMemberCommand, Guid>
 {
     private readonly IMemberRepository _memberRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -18,7 +19,7 @@ public sealed class CreateMemberCommandHandler : ICommandHandler<CreateMemberCom
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result> Handle(CreateMemberCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(CreateMemberCommand request, CancellationToken cancellationToken)
     {
         var firstNameResult = FirstName.Create(request.FirstName);
         var lastNameResult = LastName.Create(request.LastName);
@@ -43,6 +44,6 @@ public sealed class CreateMemberCommandHandler : ICommandHandler<CreateMemberCom
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return member.Id;
     }
 }
