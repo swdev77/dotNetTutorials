@@ -2,8 +2,10 @@ using Gatherly.Domain.Entities;
 
 namespace Gatherly.Domain.Repositories;
 
-public interface IGatheringRepository
+public interface IGatheringRepository : IRepository<Gathering>
 {
+    Task<Gathering?> GetByIdWithCreatorAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<Gathering?> GetByIdWithInvitationAsync(Guid id, CancellationToken cancellationToken = default);
     void Add(Gathering gathering);
-    Task<Gathering> GetByIdWithCreatorAsync(Guid gatheringId, CancellationToken cancellationToken);
+    void Remove(Gathering gathering);
 }
