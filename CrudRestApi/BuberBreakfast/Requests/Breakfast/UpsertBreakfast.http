@@ -1,4 +1,4 @@
-@id=48650582-fa07-4bf1-a84f-047634bd4668
+@id=990af8c0-9210-4044-9980-23f1fda70046
 
 PUT http://localhost:5198/breakfasts/{{id}}
 Content-Type: application/json

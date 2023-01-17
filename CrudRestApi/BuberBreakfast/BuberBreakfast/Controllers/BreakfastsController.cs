@@ -19,15 +19,14 @@ public class BreakfastsController : ApiController
     [HttpPost()]
     public IActionResult CreateBreakfast([FromBody] CreateBreakfastRequest request)
     {
-        var breakfast = new Breakfast(
-            Guid.NewGuid(),
-            request.Name,
-            request.Description,
-            request.StartDateTime,
-            request.EndDateTime,
-            DateTime.UtcNow,
-            request.Savory,
-            request.Sweet);
+        ErrorOr<Breakfast> requestToBreakfastResult = Breakfast.From(request);
+
+        if (requestToBreakfastResult.IsError)
+        {
+            return Problem(requestToBreakfastResult.Errors);
+        }
+
+        var breakfast = requestToBreakfastResult.Value;
 
         var createdResult = _breakfastService.CreateBreakfast(breakfast);
 
@@ -49,15 +48,14 @@ public class BreakfastsController : ApiController
     [HttpPut("{id:guid}")]
     public IActionResult UpsertBreakfast(Guid id, [FromBody] UpsertBreakfastRequest request)
     {
-        var breakfast = new Breakfast(
-            id,
-            request.Name,
-            request.Description,
-            request.StartDateTime,
-            request.EndDateTime,
-            DateTime.UtcNow,
-            request.Savory,
-            request.Sweet);
+        var requestToBreakfastResult = Breakfast.From(id, request);
+
+        if(requestToBreakfastResult.IsError)
+        {
+            return Problem(requestToBreakfastResult.Errors);
+        }
+
+        var breakfast = requestToBreakfastResult.Value;
 
         var upsertedResult = _breakfastService.UpsertBreakfast(breakfast);
 
