@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:BeautyShopApp.Controls"
+             x:Class="BeautyShopApp.Views.Templates.ResultItemTemplate"
+             controls:VariableSizedWrapGrid.RowSpan="1">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style x:Key="ResultTextStyle" TargetType="Label">
+                <Setter Property="FontFamily" Value="Fallingsky Bold"/>
+                <Setter Property="FontSize" Value="Large"/>
+                <Setter Property="Margin" Value="12,6,12,0" />
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+        <StackLayout>
+        <Label 
+            Text="Found"
+            Style="{StaticResource ResultTextStyle}"/>
+        <Label 
+            Text="10 Results"
+            Style="{StaticResource ResultTextStyle}"/>
+    </StackLayout>
+</ContentView>

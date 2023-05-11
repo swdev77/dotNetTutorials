@@ -1,12 +1,133 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:BeautyShopApp.Controls"
+             xmlns:viewmodels="clr-namespace:BeautyShopApp.ViewModels"
+             xmlns:templates="clr-namespace:BeautyShopApp.Views.Templates"
              x:Class="BeautyShopApp.Views.HomeView"
              Title="BeautyShop App">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <DataTemplate x:Key="ProductItemTemplate">
+                <templates:ProductItemTemplate />
+            </DataTemplate>
+
+            <DataTemplate x:Key="ResultItemTemplate">
+                <templates:ResultItemTemplate />
+            </DataTemplate>
+
+            <templates:ProductItemTemplateSelector
+                x:Key="ProductItemTemplateSelector"
+                ProductItemTemplate="{StaticResource ProductItemTemplate}"
+                ResultItemTemplate="{StaticResource ResultItemTemplate}" />
+
+            <Style x:Key="SectionContainerStyle" TargetType="Grid">
+                <Setter Property="Padding" Value="10" />
+                <Setter Property="Margin" Value="10" />
+            </Style>
+
+            <Color x:Key="SearchBarColor">#F9F9F9</Color>
+
+            <Style x:Key="SearchContainerStyle" TargetType="Frame">
+                <Setter Property="BorderColor" Value="Transparent" />
+                <Setter Property="BackgroundColor" Value="{StaticResource SearchBarColor}" />
+                <Setter Property="HasShadow" Value="False"/>
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="12"/>
+            </Style>
+                  
+            <Style x:Key="FilterContainerStyle" TargetType="Frame">
+                <Setter Property="BorderColor" Value="Transparent" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="HasShadow" Value="False"/>
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="12"/>
+            </Style>
+
+            <Style x:Key="SeachBarStyle" TargetType="SearchBar">
+                <Setter Property="FontSize" Value="Small" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+                
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.BindingContext>
+        <viewmodels:HomeViewModel/>
+    </ContentPage.BindingContext>
+
+    <Grid
+        RowDefinitions="100, 80, *"
+        BackgroundColor="{StaticResource PageBackgroundColor}">
+        
+        <!-- Header -->
+        <Grid
+            ColumnDefinitions="Auto, *"
+            Style="{StaticResource SectionContainerStyle}">
+
+            <Label 
+                Grid.ColumnSpan="2"
+                Text="Search Product"
+                FontFamily="Fallingsky"
+                HorizontalOptions="Start"
+                VerticalOptions="Center"/>
+
+
+            <Frame
+                Grid.Column="1"
+                Padding="0"
+                WidthRequest="40"
+                HeightRequest="40"
+                HorizontalOptions="End"
+                VerticalOptions="Center">
+                <Image 
+                    Source="javier.png" />
+            </Frame>
+            
+        </Grid>
+        
+        <!-- Search -->
+        <Grid 
+            Grid.Row="1"
+            ColumnDefinitions="*, Auto"
+            Style="{StaticResource SectionContainerStyle}">
+
+            <Frame
+                Style="{StaticResource SearchContainerStyle}">
+                <SearchBar 
+                    Style="{StaticResource SeachBarStyle}"
+                    Placeholder="Search for products..."/>
+            </Frame>
+            <Frame
+                Grid.Column="1"
+                Style="{StaticResource FilterContainerStyle}">
+                <Image
+                    Source="slider.png" 
+                    Aspect="AspectFill"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"/>
+            </Frame>
+            
+        </Grid>
+        
+        <!-- Product List -->
+
+        <ScrollView
+            Grid.Row="2"
+            HorizontalOptions="Center">
+            <controls:VariableSizedWrapGrid
+                Orientation="Horizontal"
+                MaximumRowsOrColumns="2"
+                ItemHeight="100"
+                ItemWidth="180"
+                HorizontalOptions="Center"
+                BindableLayout.ItemsSource="{Binding Products}"
+                BindableLayout.ItemTemplateSelector="{StaticResource ProductItemTemplateSelector}">
+
+                               
+            </controls:VariableSizedWrapGrid>
+        </ScrollView>
+        
+    </Grid>
 </ContentPage>
